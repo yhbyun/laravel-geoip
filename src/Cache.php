@@ -24,11 +24,16 @@ class Cache
      * Create a new cache instance.
      *
      * @param CacheManager $cache
+     * @param string       $driver
      * @param array        $tags
      * @param int          $expires
      */
-    public function __construct(CacheManager $cache, $tags, $expires = 30)
+    public function __construct(CacheManager $cache, $driver, $tags, $expires = 30)
     {
+        if ($driver) {
+            $cache = $cache->store($driver);
+        }
+
         $this->cache = $tags ? $cache->tags($tags) : $cache;
         $this->expires = $expires;
     }
