@@ -70,7 +70,14 @@ class MaxMindDatabase extends AbstractService
         $this->withTemporaryDirectory(function ($directory) {
             $tarFile = sprintf('%s/maxmind.tar.gz', $directory);
 
-            file_put_contents($tarFile, fopen($this->config('update_url'), 'r'));
+            $opts = [
+                'ssl' => [
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                ],
+            ];
+
+            file_put_contents($tarFile, fopen($this->config('update_url'), 'r', false, stream_context_create($opts)));
 
             $archive = new PharData($tarFile);
 
